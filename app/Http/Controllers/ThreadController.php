@@ -32,18 +32,27 @@ class ThreadController extends Controller
      */
     public function store(ThreadRequest $request)
     {
-        // save Thread
-        $thread = new Thread();
-        $thread->name = $request->name;
-        $thread->user_id = Auth::id();
-        $thread->latest_comment_time = Carbon::now();
-        $thread->save();
-        // save Message
-        $message = new Message();
-        $message->body = $request->content;
-        $message->user_id = Auth::id();
-        $message->thread_id = $thread->id;
-        $message->save();
+        \DB::beginTransaction();
+        try {
+            // save Thread
+            $thread = new Thread();
+            $thread->name = $request->name;
+            $thread->user_id = Auth::id();
+            $thread->latest_comment_time = Carbon::now();
+            $thread->save();
+
+            // save Message
+            $message = new Message();
+            $message->body = $request->content;
+            $message->user_id = Auth::id();
+            $message->thread_id = $thread->id;
+            $message->save();
+        } catch (\Exception $error) {
+            \DB::rollBack();
+            \Log::error($error->getMessage());
+            return redirect()->route('threads.index')->with('error', 'スレッドの新規作成に失敗しました。');
+        }
+        \DB::commit();
         // redirect to index method
         return redirect()->route('threads.index')->with('success', 'スレッドの新規作成が完了しました。');
     }
