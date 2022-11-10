@@ -1,0 +1,32 @@
+// プロジェクトが作成できない場合はこのコマンドを
+takke@KOUMU-02:~/dotinstall/laravel_drill$ export DOCKER_CONTENT_TRUST=0
+
+
+// プロジェクト作成
+// https://aburasoba.org/laravel-docker-1/
+takke@KOUMU-02:~/dotinstall/laravel_drill$ curl -s "https://laravel.build/bbs" | bash
+
+takke@KOUMU-02:~/dotinstall/laravel_drill$ cd bbs
+
+takke@KOUMU-02:~/dotinstall/laravel_drill/bbs$ sail up -d
+
+// Laravel でスレッド掲示板を作成（中級）。3, 4 章マイグレーションとログイン機能
+// https://aburasoba.org/laravel-docker-2/
+// テーブル作成
+
+// web.php Route::resourceの書き方
+Route::resource('/threads', ThreadController::class)->except(['create', 'update']);
+
+// つぶやきでエラーが出た --doesn't have a default value--
+// General error: 1364 Field 'is_user_checked' doesn't have a default value
+// migrationファイルの書き換え
+// $table->boolean('is_user_checked');
+$table->boolean('is_user_checked')->default(false);
+// このあとmigration:freshを実行
+sail artisan migrate:fresh
+// これでうまく行った
+
+
+それではログを確認しましょう。
+// Laravel のログは app\storage\logs\laravel.log
+   Laravel のログは \storage\logs\laravel.log
