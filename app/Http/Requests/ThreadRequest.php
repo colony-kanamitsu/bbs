@@ -15,11 +15,10 @@ class ThreadRequest extends FormRequest
     {
         return true;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, mixed>
+     * @return array
      */
     public function rules()
     {
@@ -28,7 +27,6 @@ class ThreadRequest extends FormRequest
             'content' => 'required|min:10',
         ];
     }
-
     public function messages()
     {
         return [

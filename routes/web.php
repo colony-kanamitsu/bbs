@@ -26,5 +26,5 @@ require __DIR__.'/auth.php';
 
 Route::resource('/threads', ThreadController::class)->except(['create', 'update']);
 
-Route::resource('/threads/{thread}/messages', 'MessageController')->except(['create', 'update']);
+// Route::resource('/threads/{thread}/messages', 'MessageController')->except(['create', 'update']);
 
