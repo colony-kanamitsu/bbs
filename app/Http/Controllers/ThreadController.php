@@ -8,12 +8,18 @@ use App\Models\Message;
 use App\Models\Thread;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Services\ThreadService;
+use Exception;
 
 class ThreadController extends Controller
 {
-    public function __construct()
-    {
+    protected $thread_service;
+
+    public function __construct(
+        ThreadService $thread_service // インジェクション
+    ) {
         $this->middleware('auth')->except('index');
+        $this->thread_service = $thread_service; // プロパティに代入する。
     }
     /**
      * Display a listing of the resource.
@@ -32,30 +38,18 @@ class ThreadController extends Controller
      */
     public function store(ThreadRequest $request)
     {
-        \DB::beginTransaction();
         try {
-            // save Thread
-            $thread = new Thread();
-            $thread->name = $request->name;
-            $thread->user_id = Auth::id();
-            $thread->latest_comment_time = Carbon::now();
-            $thread->save();
-
-            // save Message
-            $message = new Message();
-            $message->body = $request->content;
-            $message->user_id = Auth::id();
-            $message->thread_id = $thread->id;
-            $message->save();
-        } catch (\Exception $error) {
-            \DB::rollBack();
-            \Log::error($error->getMessage());
+            $data = $request->only(
+                ['name', 'content']
+            );
+            $this->thread_service->createNewThread($data, Auth::id()); // new せずとも $this-> の形で呼び出せる（インジェクションした為）。
+        } catch (Exception $error) {
             return redirect()->route('threads.index')->with('error', 'スレッドの新規作成に失敗しました。');
         }
-        \DB::commit();
         // redirect to index method
         return redirect()->route('threads.index')->with('success', 'スレッドの新規作成が完了しました。');
     }
+
     /**
      * Display the specified resource.
      *
