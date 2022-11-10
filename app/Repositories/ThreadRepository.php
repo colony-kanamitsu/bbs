@@ -28,4 +28,9 @@ class ThreadRepository
     {
         return $this->thread->create($data);
     }
+
+    public function getPaginatedThreads(int $per_page)
+    {
+        return $this->thread->paginate($per_page);
+    }
 }
