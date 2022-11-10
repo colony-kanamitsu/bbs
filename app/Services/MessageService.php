@@ -9,28 +9,15 @@ use Illuminate\Support\Facades\Log;
 
 class MessageService
 {
-    /**
-     * @var ThreadRepository
-     */
+
     protected $thread_repository;
 
-    /**
-     * ThreadService constructor.
-     *
-     * @param ThreadRepository $thread_repository
-     */
     public function __construct(
         ThreadRepository $thread_repository
     ) {
         $this->thread_repository = $thread_repository;
     }
 
-    /**
-     * Create new message and first new message.
-     *
-     * @param array $data
-     * @return Tread $thread
-     */
     public function createNewMessage(array $data, string $thread_id)
     {
         DB::beginTransaction();
@@ -44,6 +31,7 @@ class MessageService
             throw new Exception($error->getMessage());
         }
         DB::commit();
+        
         return $thread;
     }
 }

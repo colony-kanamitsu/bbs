@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use Illuminate\Http\Request;
 use App\Http\Requests\MessageRequest;
 use App\Services\MessageService;
-use App\Models\Thread;
 use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
@@ -69,6 +67,7 @@ class MessageController extends Controller
 
         return redirect()->route('threads.index')->with('success', 'メッセージを投稿しました');
     }
+
     /**
      * Display the specified resource.
      *

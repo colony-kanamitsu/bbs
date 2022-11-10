@@ -1,5 +1,6 @@
 <x-layout title="test">
     <div class="container">
+        @include('layouts.flash-message')
         <div class="row justify-content-center">
             <div class="col-md-8">
                 {{ $threads->links() }}
@@ -19,7 +20,7 @@
                             </div>
                         @endforeach
                         <div class="card-footer">
-                            <form method="POST" action="" class="mb-5">
+                            <form method="POST" action="{{ route('messages.store', $thread->id) }}" class="mb-5">
                                 @csrf
                                 <div class="form-group">
                                     <label for="thread-first-content">内容</label>
@@ -39,7 +40,6 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-md-8">
-                @include('layouts.flash-message')
                 <div class="card">
                     <h5 class="card-header">新規スレッド作成</h5>
                     <div class="card-body">
